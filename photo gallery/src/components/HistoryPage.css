@@ -1,0 +1,27 @@
+/* src/components/History.css */
+.button-container {
+  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.history-button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.history-button:hover {
+  background-color: #2980b9;
+}
+
+h2 {
+  padding: 8px 12px;
+}
