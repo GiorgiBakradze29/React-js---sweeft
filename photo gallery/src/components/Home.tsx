@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useInfiniteQuery } from "react-query";
 import axios from "axios";
 import config from "../config";
 import Card from "./Card";
-import { useInfiniteQuery } from "react-query";
-import { useSearchContext } from "./SearchContext";
-import "./HistoryPage.css";
+import SearchBar from "./SearchBar";
+import "./HomePage.css";
 import ImageModal from "./ImageModal";
+import { useSearchContext } from "./SearchContext";
 
 interface Image {
   id: string;
@@ -17,19 +18,20 @@ interface Image {
   alt: string;
 }
 
-const HistoryPage: React.FC = () => {
-  const { searchHistory } = useSearchContext();
-  const [selectedWord, setSelectedWord] = useState<string | null>(null);
+const HomePage: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const { addToSearchHistory } = useSearchContext();
 
   const fetchImages = async ({ pageParam = 1 }) => {
-    if (selectedWord) {
-      const apiUrl = `https://api.unsplash.com/search/photos?page=${pageParam}&client_id=${config.unsplashApiKey}&query=${selectedWord}&per_page=20`;
-      const response = await axios.get(apiUrl);
-      return response.data.results;
-    }
-    return [];
+    const apiUrl = searchQuery
+      ? `https://api.unsplash.com/search/photos?page=${pageParam}&client_id=${config.unsplashApiKey}&query=${searchQuery}&per_page=20`
+      : `https://api.unsplash.com/photos?page=${pageParam}&client_id=${config.unsplashApiKey}&order_by=popularity&per_page=20`;
+
+    const response = await axios.get(apiUrl);
+
+    return searchQuery ? response.data.results : response.data;
   };
 
   const {
@@ -37,17 +39,26 @@ const HistoryPage: React.FC = () => {
     fetchNextPage,
     hasNextPage,
     isFetching,
-  } = useInfiniteQuery(["images", selectedWord], fetchImages, {
+  } = useInfiniteQuery(["images", searchQuery], fetchImages, {
     getNextPageParam: (lastPage, allPages) => {
       return allPages.length + 1;
     },
   });
 
-  const handleButtonClick = (word: string) => {
-    if (word !== selectedWord) {
-      setSelectedWord(word);
+  const handleScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 10 &&
+      !isFetching &&
+      hasNextPage
+    ) {
       fetchNextPage();
     }
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    addToSearchHistory(query);
   };
 
   const handleImageClick = (image: Image) => {
@@ -61,37 +72,15 @@ const HistoryPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + document.documentElement.scrollTop >=
-          document.documentElement.offsetHeight - 10 &&
-        !isFetching &&
-        hasNextPage
-      ) {
-        fetchNextPage();
-      }
-    };
-
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [fetchNextPage, isFetching, hasNextPage]);
+  }, [isFetching, hasNextPage, fetchNextPage]);
 
   return (
     <div>
-      <h2>Search History:</h2>
-      <div className="button-container">
-        {searchHistory.map((word, index) => (
-          <button
-            className="history-button"
-            key={index}
-            onClick={() => handleButtonClick(word)}
-          >
-            {word}
-          </button>
-        ))}
-      </div>
+      <SearchBar onSearch={handleSearch} />
       <div className="container">
         {images?.pages.map((page, pageIndex) =>
           page.map((image: Image, index: number) => (
@@ -103,7 +92,6 @@ const HistoryPage: React.FC = () => {
           ))
         )}
       </div>
-      {isFetching && <div>Loading more...</div>}
       <ImageModal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -113,4 +101,4 @@ const HistoryPage: React.FC = () => {
   );
 };
 
-export default HistoryPage;
+export default HomePage;

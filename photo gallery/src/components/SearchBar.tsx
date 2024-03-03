@@ -1,4 +1,3 @@
-// src/components/SearchBar.tsx
 import React, { useState } from "react";
 import "./SearchBar.css";
 
@@ -14,15 +13,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     const inputValue = event.target.value;
     setQuery(inputValue);
 
-    // Clear previous timeout
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
 
-    // Set a new timeout to trigger search after 2 seconds of inactivity
     const newTimeoutId = setTimeout(() => {
       onSearch(inputValue);
-    }, 2000);
+    }, 1500);
 
     setTimeoutId(newTimeoutId);
   };

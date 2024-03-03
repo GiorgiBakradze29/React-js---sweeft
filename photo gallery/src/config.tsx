@@ -1,11 +1,9 @@
-// config.ts
-
 interface AppConfig {
   unsplashApiKey: string;
 }
 
 const config: AppConfig = {
-  unsplashApiKey: "nnSnAI-UIhwL0wnIbr8YWZU3uRTRwFvKg8owIjCw0ek",
+  unsplashApiKey: "2B0GECXzUDQpydC-28AZhQy7n6hbMZbMiGrFuFvIcDs",
 };
 
 export default config;

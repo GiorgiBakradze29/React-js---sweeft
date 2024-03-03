@@ -1,28 +1,30 @@
-// src/components/App.tsx
 import React from "react";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
-import MainPage from "./components/Main";
+import HomePage from "./components/Home";
 import HistoryPage from "./components/History";
+import { SearchProvider } from "./components/SearchContext";
 import "./components/Navigation.css";
 
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="navbar">
-        <ul>
-          <li>
-            <Link to="/">Main</Link>
-          </li>
-          <li>
-            <Link to="/history">History</Link>
-          </li>
-        </ul>
-      </div>
+      <SearchProvider>
+        <div className="navbar">
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/history">History</Link>
+            </li>
+          </ul>
+        </div>
 
-      <Routes>
-        <Route path="/history" element={<HistoryPage />} />
-        <Route path="/" element={<MainPage />} />
-      </Routes>
+        <Routes>
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </SearchProvider>
     </Router>
   );
 };

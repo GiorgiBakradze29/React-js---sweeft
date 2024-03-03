@@ -1,4 +1,3 @@
-/* src/components/History.css */
 .button-container {
   padding: 8px 12px;
   display: flex;
@@ -15,7 +14,7 @@
   border-radius: 8px;
   cursor: pointer;
   margin-bottom: 10px;
-  transition: background-color 0.3s ease; /* Smooth transition on hover */
+  transition: background-color 0.3s ease;
 }
 
 .history-button:hover {

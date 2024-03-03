@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
+import { useQuery } from "react-query";
 import config from "../config";
 import "./ImageModal.css";
 
@@ -25,33 +26,25 @@ interface ImageStats {
   };
 }
 
-const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, image }) => {
-  const [stats, setStats] = useState<ImageStats | null>(null);
+const fetchImageStats = async (photoId: string) => {
+  const response = await axios.get(
+    `https://api.unsplash.com/photos/${photoId}/statistics?client_id=${config.unsplashApiKey}`
+  );
+  return response.data;
+};
 
-  const fetchImageStats = async (
-    photoId: string
-  ): Promise<ImageStats | null> => {
-    try {
-      const response = await axios.get(
-        `https://api.unsplash.com/photos/${photoId}/statistics?client_id=${config.unsplashApiKey}`
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching image stats:", error);
-      return null;
+const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, image }) => {
+  const { data: stats } = useQuery<ImageStats | null>(
+    ["imageStats", image?.id],
+    () => fetchImageStats(image!.id),
+    {
+      enabled: !!image,
     }
-  };
+  );
 
   useEffect(() => {
-    const getImageStats = async () => {
-      if (image) {
-        const stats = await fetchImageStats(image.id);
-        setStats(stats);
-      }
-    };
-
-    getImageStats();
-  }, [image]);
+    // You can do additional things here when the stats change
+  }, [stats]);
 
   if (!isOpen || !image) {
     return null;
@@ -59,7 +52,6 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, image }) => {
 
   const { urls, alt, likes } = image;
 
-  // Check if stats are available
   const views = stats ? stats.views.total : "N/A";
   const downloads = stats ? stats.downloads.total : "N/A";
 
