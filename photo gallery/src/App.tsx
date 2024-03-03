@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import HomePage from "./components/Home";
 import HistoryPage from "./components/History";
 import { SearchProvider } from "./components/SearchContext";
-import "./components/Navigation.css";
+import "./components/Styles/Navigation.css";
 
 const App: React.FC = () => {
   return (

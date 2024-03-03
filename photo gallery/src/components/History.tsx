@@ -4,7 +4,7 @@ import config from "../config";
 import Card from "./Card";
 import { useInfiniteQuery } from "react-query";
 import { useSearchContext } from "./SearchContext";
-import "./HistoryPage.css";
+import "./Styles/HistoryPage.css";
 import ImageModal from "./ImageModal";
 
 interface Image {

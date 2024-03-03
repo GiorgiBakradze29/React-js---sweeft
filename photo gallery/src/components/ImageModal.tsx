@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 import config from "../config";
-import "./ImageModal.css";
+import "./Styles/ImageModal.css";
 
 interface ImageModalProps {
   isOpen: boolean;

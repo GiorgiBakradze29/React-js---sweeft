@@ -4,7 +4,7 @@ import axios from "axios";
 import config from "../config";
 import Card from "./Card";
 import SearchBar from "./SearchBar";
-import "./HomePage.css";
+import "./Styles/HomePage.css";
 import ImageModal from "./ImageModal";
 import { useSearchContext } from "./SearchContext";
 
