@@ -42,9 +42,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, image }) => {
     }
   );
 
-  useEffect(() => {
-    // You can do additional things here when the stats change
-  }, [stats]);
+  useEffect(() => {}, [stats]);
 
   if (!isOpen || !image) {
     return null;
